@@ -22,9 +22,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 
-/**
- * JWT token üretimi ve doğrulaması için kullanılan bileşen.
- */
 @Component
 public class JwtTokenProvider {
 
@@ -41,20 +38,11 @@ public class JwtTokenProvider {
 
     private SecretKey key;
 
-    /**
-     * Bean oluşturulduğunda anahtar hazırlanır.
-     */
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    /**
-     * Kullanıcı bilgilerinden JWT token oluşturur.
-     *
-     * @param user token oluşturulacak kullanıcı
-     * @return oluşturulan JWT token
-     */
     public String generateToken(User user) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + jwtExpirationMs);
@@ -69,12 +57,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /**
-     * Token'ın geçerli olup olmadığını kontrol eder.
-     *
-     * @param token kontrol edilecek token
-     * @return token geçerli ise true, değilse false
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -96,12 +78,6 @@ public class JwtTokenProvider {
         return false;
     }
 
-    /**
-     * Token'dan kullanıcı adını çıkarır.
-     *
-     * @param token işlenecek token
-     * @return kullanıcı adı
-     */
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
@@ -111,12 +87,6 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    /**
-     * Token'dan kullanıcı rolünü çıkarır.
-     *
-     * @param token işlenecek token
-     * @return kullanıcı rolü
-     */
     public String getRoleFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
@@ -126,12 +96,6 @@ public class JwtTokenProvider {
         return claims.get("role", String.class);
     }
 
-    /**
-     * Token'dan kullanıcı ID'sini çıkarır.
-     *
-     * @param token işlenecek token
-     * @return kullanıcı ID'si
-     */
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)

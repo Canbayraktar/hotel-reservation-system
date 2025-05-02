@@ -35,7 +35,6 @@ class AuthControllerTest {
 
     @Test
     void register_shouldReturn201() throws Exception {
-        // Given
         RegisterRequest request = new RegisterRequest();
         request.setUsername("testuser");
         request.setPassword("password");
@@ -46,7 +45,6 @@ class AuthControllerTest {
 
         when(authService.register(any(RegisterRequest.class))).thenReturn(response);
 
-        // When & Then
         mockMvc.perform(post("/api/auth/register")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -58,7 +56,7 @@ class AuthControllerTest {
 
     @Test
     void login_shouldReturn200() throws Exception {
-        // Given
+        
         LoginRequest request = new LoginRequest();
         request.setUsername("testuser");
         request.setPassword("password");
@@ -70,7 +68,6 @@ class AuthControllerTest {
 
         when(authService.login(any(LoginRequest.class))).thenReturn(response);
 
-        // When & Then
         mockMvc.perform(post("/api/auth/login")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)

@@ -4,10 +4,6 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-/**
- * Oda DTO sınıfı.
- * Servis katmanı ile sunum katmanı arasında veri transferi için kullanılır.
- */
 @Data
 public class RoomDto {
     private Long id;

@@ -8,10 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 
-/**
- * Test verileri yükleyici sınıfı.
- * Uygulama başladığında örnek verileri veritabanına ekler.
- */
 @Configuration
 public class TestDataInitializer {
 

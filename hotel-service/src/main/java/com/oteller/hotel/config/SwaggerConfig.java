@@ -17,5 +17,4 @@ import org.springframework.context.annotation.Configuration;
     bearerFormat = "JWT"
 )
 public class SwaggerConfig {
-    // Otomatik yapılandırma için özel ayarlar gerekmez
 } 

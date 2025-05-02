@@ -7,10 +7,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-/**
- * Oda entity sınıfı.
- * Otellere ait odaları temsil eder.
- */
 @Entity
 @Table(name = "rooms")
 @Getter

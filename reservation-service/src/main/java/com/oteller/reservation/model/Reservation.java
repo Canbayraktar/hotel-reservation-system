@@ -7,10 +7,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-/**
- * Rezervasyon entity sınıfı.
- * Oda rezervasyonlarının bilgilerini tutar.
- */
 @Entity
 @Table(name = "reservations")
 @Getter

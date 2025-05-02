@@ -23,6 +23,6 @@ public class ReservationEventListener {
                 event.getCheckInDate(), 
                 event.getCheckOutDate());
         
-        // Gerçek uygulamada burada e-posta gönderme servisi çağrılabilir
+        // Gerçek uygulamada burada e-posta gönderme servisi çağrılabilir. Şuan fazla vaktim yok.
     }
 } 

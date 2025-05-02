@@ -11,35 +11,18 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-/**
- * Rezervasyon servis implementasyonu.
- * GenericServiceImpl'den türer ve ReservationService arayüzünü uygular.
- */
 @Service
 public class ReservationServiceImpl extends GenericServiceImpl<Reservation, Long> implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationEventProducer eventProducer;
 
-    /**
-     * Constructor injection ile bağımlılıkları alır.
-     *
-     * @param repository rezervasyon repository'si
-     * @param eventProducer rezervasyon event producer'ı
-     */
     public ReservationServiceImpl(ReservationRepository repository, ReservationEventProducer eventProducer) {
         super(repository);
         this.reservationRepository = repository;
         this.eventProducer = eventProducer;
     }
 
-    /**
-     * Rezervasyonun çakışma durumunu kontrol eder.
-     * Aynı oda için, tarih aralıklarında çakışma olup olmadığını kontrol eder.
-     *
-     * @param reservation kontrol edilecek rezervasyon
-     * @return çakışma varsa true, yoksa false
-     */
     @Override
     public boolean hasConflict(Reservation reservation) {
         // Aynı id'ye sahip olan rezervasyon, kendisi ile çakışmaz
@@ -49,7 +32,6 @@ public class ReservationServiceImpl extends GenericServiceImpl<Reservation, Long
                 reservation.getCheckOutDate()
         );
         
-        // Eğer bu mevcut bir rezervasyonun güncellemesi ise, kendisi ile çakışmasını göz ardı et
         if (reservation.getId() != null) {
             conflicts = conflicts.stream()
                     .filter(r -> !r.getId().equals(reservation.getId()))
@@ -59,14 +41,6 @@ public class ReservationServiceImpl extends GenericServiceImpl<Reservation, Long
         return !conflicts.isEmpty();
     }
     
-    /**
-     * Veritabanı kilidi kullanarak (pessimistic locking) çakışma kontrolü yapar ve rezervasyon oluşturur.
-     * Bu metot aynı oda için eşzamanlı rezervasyon isteklerinde veri tutarlılığını sağlar.
-     *
-     * @param reservation oluşturulacak rezervasyon
-     * @return kaydedilen rezervasyon
-     * @throws IllegalStateException rezervasyon çakışması durumunda
-     */
     @Override
     @Transactional
     public Reservation createWithLockCheck(Reservation reservation) {
@@ -76,7 +50,6 @@ public class ReservationServiceImpl extends GenericServiceImpl<Reservation, Long
                 reservation.getCheckOutDate()
         );
         
-        // Mevcut bir rezervasyonun güncellemesi ise, kendisi ile çakışmasını göz ardı et
         if (reservation.getId() != null) {
             conflicts = conflicts.stream()
                     .filter(r -> !r.getId().equals(reservation.getId()))
@@ -89,7 +62,6 @@ public class ReservationServiceImpl extends GenericServiceImpl<Reservation, Long
         
         Reservation saved = reservationRepository.save(reservation);
         
-        // Rezervasyon oluştuğunda event gönder
         ReservationCreatedEvent event = new ReservationCreatedEvent();
         event.setReservationId(saved.getId());
         event.setHotelId(saved.getHotelId());

@@ -6,9 +6,6 @@ import com.oteller.common.mapper.GenericMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-/**
- * Otel entity ve DTO dönüşümleri için mapper.
- */
 @Mapper(componentModel = "spring")
 public interface HotelMapper extends GenericMapper<HotelDto, Hotel> {
     

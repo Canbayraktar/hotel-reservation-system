@@ -8,10 +8,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Otel entity sınıfı.
- * Sistemde kayıtlı otellerin bilgilerini tutar.
- */
 @Entity
 @Table(name = "hotels")
 @Getter

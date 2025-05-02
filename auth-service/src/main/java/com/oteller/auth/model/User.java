@@ -5,10 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Kullanıcı entity sınıfı.
- * Sistemde kayıtlı kullanıcıların bilgilerini tutar.
- */
 @Entity
 @Table(name = "users")
 @Getter

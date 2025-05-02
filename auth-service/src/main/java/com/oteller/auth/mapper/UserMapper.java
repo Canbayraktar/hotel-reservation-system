@@ -6,9 +6,6 @@ import com.oteller.common.mapper.GenericMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-/**
- * Kullanıcı entity ve DTO dönüşümleri için mapper.
- */
 @Mapper(componentModel = "spring")
 public interface UserMapper extends GenericMapper<UserDto, User> {
     

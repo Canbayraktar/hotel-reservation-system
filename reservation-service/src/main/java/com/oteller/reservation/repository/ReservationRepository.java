@@ -11,20 +11,9 @@ import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Rezervasyon veri erişim arayüzü.
- */
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    /**
-     * Belirli bir odanın tarih aralığında çakışan rezervasyonlarını bulur.
-     * 
-     * @param roomId oda ID'si
-     * @param checkIn giriş tarihi
-     * @param checkOut çıkış tarihi
-     * @return çakışan rezervasyonların listesi
-     */
     @Query("SELECT r FROM Reservation r WHERE r.roomId = :roomId AND " +
            "r.checkInDate < :checkOut AND r.checkOutDate > :checkIn")
     List<Reservation> findConflictingReservations(
@@ -32,15 +21,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("checkIn") LocalDate checkIn, 
             @Param("checkOut") LocalDate checkOut);
             
-    /**
-     * Belirli bir odanın tarih aralığında çakışan rezervasyonlarını PESSIMISTIC_WRITE kilit modu ile bulur.
-     * Bu metot, veritabanı seviyesinde kilit alarak eşzamanlı rezervasyon çakışmalarını önler.
-     * 
-     * @param roomId oda ID'si
-     * @param checkIn giriş tarihi
-     * @param checkOut çıkış tarihi
-     * @return çakışan rezervasyonların listesi
-     */
+            
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT r FROM Reservation r WHERE r.roomId = :roomId AND " +
            "r.checkInDate < :checkOut AND r.checkOutDate > :checkIn")

@@ -6,9 +6,6 @@ import com.oteller.hotel.model.Room;
 import com.oteller.common.mapper.BaseMapper;
 import org.mapstruct.*;
 
-/**
- * Oda entity ve DTO dönüşümleri için mapper.
- */
 @Mapper(componentModel = "spring")
 public interface RoomMapper extends BaseMapper<RoomDto, Room> {
 

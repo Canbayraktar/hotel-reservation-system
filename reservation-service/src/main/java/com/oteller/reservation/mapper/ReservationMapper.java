@@ -6,9 +6,6 @@ import com.oteller.common.mapper.GenericMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-/**
- * Rezervasyon entity ve DTO dönüşümleri için mapper.
- */
 @Mapper(componentModel = "spring")
 public interface ReservationMapper extends GenericMapper<ReservationDto, Reservation> {
     

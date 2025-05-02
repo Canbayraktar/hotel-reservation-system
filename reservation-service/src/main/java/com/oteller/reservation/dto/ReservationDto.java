@@ -7,10 +7,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-/**
- * Rezervasyon DTO sınıfı.
- * Servis katmanı ile sunum katmanı arasında veri transferi için kullanılır.
- */
 @Data
 public class ReservationDto {
     private Long id;

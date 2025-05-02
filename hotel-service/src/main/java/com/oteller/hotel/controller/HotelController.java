@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Otel REST Controller sınıfı.
- * Otel ile ilgili HTTP isteklerini karşılar ve işler.
- */
 @RestController
 @RequestMapping("/api/hotels")
 @Tag(name = "Otel Yönetimi", description = "Otel kayıt ve yönetim işlemleri")
@@ -33,12 +29,6 @@ public class HotelController {
         this.hotelMapper = hotelMapper;
     }
 
-    /**
-     * Yeni otel oluşturur.
-     *
-     * @param dto otel bilgilerini içeren DTO
-     * @return oluşturulan otel bilgileri
-     */
     @Operation(summary = "Yeni otel oluşturma", description = "Yeni bir otel kaydı oluşturur")
     @ApiResponse(responseCode = "201", description = "Otel başarıyla oluşturuldu")
     @SecurityRequirement(name = "bearerAuth")
@@ -48,23 +38,12 @@ public class HotelController {
         return ResponseEntity.status(HttpStatus.CREATED).body(hotelMapper.toDto(saved));
     }
 
-    /**
-     * Tüm otelleri getirir.
-     *
-     * @return otellerin listesi
-     */
     @Operation(summary = "Tüm otelleri listele", description = "Sistemdeki tüm otelleri listeler")
     @GetMapping
     public List<HotelDto> findAll() {
         return hotelMapper.toDtoList(hotelService.findAll());
     }
 
-    /**
-     * ID'ye göre otel getirir.
-     *
-     * @param id otel ID'si
-     * @return bulunan otel, yoksa 404
-     */
     @Operation(summary = "Otel detayı görüntüleme", description = "ID'ye göre otel bilgilerini getirir")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Otel bulundu"),
@@ -77,13 +56,6 @@ public class HotelController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Otel bilgilerini günceller.
-     *
-     * @param id otel ID'si
-     * @param dto güncellenecek bilgileri içeren DTO
-     * @return güncellenen otel bilgileri, otel yoksa 404
-     */
     @Operation(summary = "Otel bilgilerini güncelleme", description = "Var olan otelin bilgilerini günceller")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Otel başarıyla güncellendi"),
@@ -99,12 +71,6 @@ public class HotelController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Oteli siler.
-     *
-     * @param id silinecek otel ID'si
-     * @return HTTP 204 No Content
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         hotelService.deleteById(id);

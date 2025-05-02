@@ -11,10 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Test verileri yükleyici sınıfı.
- * Uygulama başladığında örnek verileri veritabanına ekler.
- */
 @Configuration
 public class TestDataInitializer {
 
@@ -24,7 +20,6 @@ public class TestDataInitializer {
             RoomRepository roomRepository) {
         return args -> {
             if (hotelRepository.count() == 0) {
-                // Örnek otel verileri
                 Hotel hotel1 = new Hotel();
                 hotel1.setName("Grand Hotel");
                 hotel1.setAddress("İstanbul, Taksim");
@@ -43,7 +38,6 @@ public class TestDataInitializer {
                 hotel3.setStarRating(3);
                 hotelRepository.save(hotel3);
                 
-                // Örnek oda verileri
                 Room room1 = new Room();
                 room1.setRoomNumber("101");
                 room1.setCapacity(2);

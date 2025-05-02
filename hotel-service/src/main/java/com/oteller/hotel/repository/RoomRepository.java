@@ -6,17 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Oda veri erişim arayüzü.
- */
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    
-    /**
-     * Belirli bir otele ait odaları bulur.
-     *
-     * @param hotelId otel ID'si
-     * @return otel odalarının listesi
-     */
+
     List<Room> findByHotelId(Long hotelId);
 } 
