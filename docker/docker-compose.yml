@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - app-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: oteller-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  gateway-service:
+    build: ../gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED: false
+      SPRING_CLOUD_GATEWAY_ROUTES_0_URI: http://auth-service:8080
+      SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0: Path=/auth/**
+      SPRING_CLOUD_GATEWAY_ROUTES_1_URI: http://hotel-service:8081
+      SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0: Path=/hotels/**,/rooms/**
+      SPRING_CLOUD_GATEWAY_ROUTES_2_URI: http://reservation-service:8082
+      SPRING_CLOUD_GATEWAY_ROUTES_2_PREDICATES_0: Path=/reservations/**
+      SPRING_CLOUD_GATEWAY_ROUTES_3_URI: http://notification-service:8083
+      SPRING_CLOUD_GATEWAY_ROUTES_3_PREDICATES_0: Path=/notifications/**
+    depends_on:
+      - auth-service
+      - hotel-service
+      - reservation-service
+      - notification-service
+    networks:
+      - app-network
+
+  auth-service:
+    build: ../auth-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/oteller-db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      JWT_SECRET: securesecuresecuresecuresecuresecuresecuresecuresecure
+      APP_JWT_SECRET: securesecuresecuresecuresecuresecuresecuresecuresecure
+      SECURITY_JWT_SECRET: securesecuresecuresecuresecuresecuresecuresecuresecure
+    ports:
+      - "8081:8080"
+    networks:
+      - app-network
+
+  hotel-service:
+    build: ../hotel-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/oteller-db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8082:8081"
+    networks:
+      - app-network
+
+  reservation-service:
+    build: ../reservation-service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/oteller-db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8083:8082"
+    networks:
+      - app-network
+
+  notification-service:
+    build: ../notification-service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/oteller-db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8084:8083"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge 

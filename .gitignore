@@ -1,0 +1,53 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+!src/main/resources/static/ # keep static folder if needed
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+logs/
+*.out
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env
+
+# Docker
+docker/*.env
+**/Dockerfile
+**/docker-compose.override.yml
+**/.dockerignore
+
+# Test reports
+surefire-reports/
+jacoco.exec
+target/site/
+
+# Swagger/OpenAPI temp
+*.swagger.json
+*.yaml
+
+# JaCoCo reports
+target/site/jacoco/
+
+# Cursor
+.cursor/
